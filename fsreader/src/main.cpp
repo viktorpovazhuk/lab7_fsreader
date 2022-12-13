@@ -8,7 +8,7 @@
 #include <cstdio>
 
 int main(int argc, char* argv[]) {
-    if (argc < 1) {
+    if (argc < 2) {
         std::cerr << "Enter image file name";
         return EXIT_FAILURE;
     }
