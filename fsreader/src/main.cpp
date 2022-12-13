@@ -8,11 +8,13 @@
 #include <cstdio>
 
 int main(int argc, char* argv[]) {
-    std::string path = "../data/fat16.img";
+    if (argc < 1) {
+        std::cerr << "Enter image file name";
+        return EXIT_FAILURE;
+    }
+    std::string path = argv[1];
     fat_image image{path};
     std::cout << image.get_characteristics();
-    // get sector/block size -> buffer size
-    // don't need
     std::vector<std::string> file_infos = image.get_files();
     for (auto info: file_infos) {
         std::cout << info << '\n';
