@@ -22,10 +22,6 @@ fat_image::fat_image(std::string &image_path) {
     FAT_offset = boot_sector.BPB_bytesPerSec * boot_sector.BPB_RsvdSecCnt;
     root_dir_offset = FAT_offset + bytesPerFAT * boot_sector.BPB_NumFATs;
     data_offset = root_dir_offset + boot_sector.BPB_RootEntCnt * 32;
-    printf("FAT offset: %zu\n"
-           "Root offset: %zu\n"
-           "Data offset: %zu\n",
-           FAT_offset, root_dir_offset, data_offset);
 }
 
 fat_image::~fat_image() {
@@ -102,7 +98,6 @@ std::string fat_image::get_next_file() {
 std::vector<std::string> fat_image::get_files() {
     image_file.seekg(root_dir_offset, std::ios_base::beg);
     std::vector<std::string> file_infos;
-    file_infos.push_back(get_next_file());
     std::string file_info;
     while (!(file_info = get_next_file()).empty()) {
         file_infos.push_back(file_info);

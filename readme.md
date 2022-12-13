@@ -1,6 +1,6 @@
 # Lab work 7: Disk image reading
 Authors (team): Viktor Povazhuk<br>
-Variant: FAT16
+Variant: FAT16 without MBR
 
 ### Compilation
 
@@ -17,4 +17,4 @@ $bin: ./fsreader ../data/fat16.img
 
 ### Important!
 
-Chose FAT16 for implementation.
+Chose FAT16 without MBR for implementation.

@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
     fat_image image{path};
     std::cout << image.get_characteristics();
     std::vector<std::string> file_infos = image.get_files();
-    for (auto info: file_infos) {
+    for (auto &info: file_infos) {
         std::cout << info << '\n';
     }
     return 0;
