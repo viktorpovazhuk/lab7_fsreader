@@ -55,7 +55,7 @@ include(cmake/CompilerWarnings.cmake)
 ##########################################################
 
 #! Project main executable source compilation
-add_executable(${PROJECT_NAME} fsreader/src/main.cpp fsreader/include/structs.h fsreader/src/fat_image.cpp fsreader/include/fat_image.h)
+add_executable(${PROJECT_NAME} fsreader/src/main.cpp fsreader/include/structs.h fsreader/src/fat_image.cpp fsreader/include/fat_image.h fsreader/include/fmt_functions.h fsreader/src/fmt_functions.cpp)
 
 #! Put path to your project headers
 target_include_directories(${PROJECT_NAME} PRIVATE fsreader/include)

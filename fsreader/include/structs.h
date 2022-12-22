@@ -5,6 +5,8 @@
 #define TEMPLATE_STRUCTS_H
 
 #include <cstdint>
+#include <string>
+#include <cstring>
 
 #pragma pack(push, 1)
 
@@ -82,6 +84,104 @@ struct FAT_dir_entry {
     uint16_t modif_date;
     uint16_t low_bytes_first_clus;
     uint32_t file_size;
+
+    std::string parse_file_name() {
+        char name[9], ext[4];
+        for (int i = 2; i > -1; --i) {
+            if (this->file_name[8 + i] != 0x20) {
+                memcpy(ext, this->file_name + 8, i + 1);
+                ext[i + 1] = '\0';
+                break;
+            }
+            if (i == 0) {
+                ext[0] = '\0';
+            }
+        }
+        for (int i = 7; i > -1; --i) {
+            if (this->file_name[i] != 0x20) {
+                memcpy(name, this->file_name, i + 1);
+                name[i + 1] = '\0';
+                break;
+            }
+        }
+        std::string parsed_file_name = (is_directory() ? "/" : "") + std::string{name} + (!std::string{ext}.empty() ? "." : "") + std::string{ext};
+
+        return parsed_file_name;
+    }
+
+    bool is_available() {
+        return this->file_name[0] == 0x00;
+    }
+
+    bool is_deleted() {
+        return this->file_name[0] == 0xE5;
+    }
+
+    bool is_lfn_part() {
+        return this->attributes == 0x0F;
+    }
+
+    bool is_read_only() {
+        return (this->attributes & 0x01) != 0;
+    }
+
+    bool is_hidden() {
+        return (this->attributes & 0x02) != 0;
+    }
+
+    bool is_system() {
+        return (this->attributes & 0x04) != 0;
+    }
+
+    bool is_volume_label() {
+        return (this->attributes & 0x08) != 0;
+    }
+
+    bool is_directory() {
+        return (this->attributes & 0x10) != 0;
+    }
+
+    bool is_archive() {
+        return (this->attributes & 0x20) != 0;
+    }
+
+    bool is_device() {
+        return (this->attributes & 0x40) != 0;
+    }
+
+    bool is_reserved() {
+        return (this->attributes & 0x80) != 0;
+    }
+
+    std::string parse_date(uint16_t date) {
+        int day = date % (1 << 5),
+                month = (date >> 5) % (1 << 4),
+                year = (date >> 9) % (1 << 7) + 1980;
+        return std::to_string(year) + "/" + std::to_string(month) + "/" + std::to_string(day);
+    }
+
+    std::string parse_time(uint16_t time) {
+        int secs = time % (1 << 5) * 2,
+                mins = (time >> 5) % (1 << 6),
+                hours = (time >> 11) % (1 << 5);
+        return std::to_string(hours) + ":" + std::to_string(mins) + ":" + std::to_string(secs);
+    }
+
+    std::string parse_create_time() {
+        return parse_time(this->creat_time);
+    }
+
+    std::string parse_create_date() {
+       return parse_date(this->creat_date);
+    }
+
+    std::string parse_modify_time() {
+        return parse_time(this->modif_time);
+    }
+
+    std::string parse_modify_date() {
+        return parse_date(this->modif_date);
+    }
 };
 #pragma pack(pop)
 

@@ -13,22 +13,27 @@
 
 class fat_image {
 public:
-    fat_image(std::string &image_path);
+    fat_image(std::string &image_path) : image_path(image_path) {}
     ~fat_image();
 
-    std::string get_characteristics();
-    std::vector<std::string> get_files();
+    void open();
+    void close();
+
+    FAT_boot_sector_t read_boot_sector();
+    std::vector<FAT_dir_entry> read_root_dir_entries();
 
 private:
-    std::string get_next_file();
+    FAT_dir_entry get_next_entry();
 
+    std::string image_path;
     std::ifstream image_file{};
-    FAT_boot_sector_t boot_sector{};
-    size_t bytesPerFAT;
-    size_t bytesPerClus;
+
+    size_t boot_sec_offset = 0;
     size_t FAT_offset;
     size_t root_dir_offset;
     size_t data_offset;
+
+    int max_num_root_entries;
 };
 
 
